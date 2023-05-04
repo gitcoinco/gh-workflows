@@ -26,5 +26,17 @@ jobs:
           echo $RELEASE_VERSION
           echo "tag"
           echo ${{ steps.vars.outputs.tag }}
-          echo "context"
-          echo ${{github}}
+          echo "ref"
+          echo ${{ github.ref }}
+          echo "head_ref"
+          echo ${{ github.head_ref }}
+          echo "base_ref"
+          echo ${{ github.base_ref }}
+          echo "ref_name"
+          echo ${{ github.ref_name }}
+          echo "ref_type"
+          echo ${{ github.ref_type }}
+          echo "action_ref"
+          echo ${{ github.action_ref }}
+          echo "action"
+          echo ${{ github.action }}
