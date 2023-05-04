@@ -27,4 +27,4 @@ jobs:
           echo "tag"
           echo ${{ steps.vars.outputs.tag }}
           echo "context"
-          echo ${{github.context}}
+          echo ${{github}}
