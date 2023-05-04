@@ -1,0 +1,28 @@
+name: Deploy API to Staging
+
+on:
+  workflow_dispatch:
+    # inputs:
+    #   commit:
+    #     description: "Branch/Commit ref"
+    #     default: ""
+    #     required: true
+    #     type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set output
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          echo $RELEASE_VERSION
+          echo "tag"
+          echo ${{ steps.vars.outputs.tag }}
+          echo "context"
+          echo ${{github.context}}
