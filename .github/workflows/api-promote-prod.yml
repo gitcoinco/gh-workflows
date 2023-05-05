@@ -10,6 +10,6 @@ jobs:
     steps:
       - name: Gets latest created release info
         id: latest_release_info
-        uses: lucianHymer/get-current-release-action@v1.1
+        uses: lucianHymer/get-current-release-action@v1.2
         with:
           token: ${{ env.GITHUB_TOKEN }}
