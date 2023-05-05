@@ -16,6 +16,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check output
         env:
-          RELEASE_VERSION: ${{ steps.latest_release.outputs.tag }}
+          RELEASE_TAG: ${{ steps.latest_release.outputs.release }}
         run: |
-          echo ${{env.RELEASE_VERSION}}
+          echo ${{env.RELEASE_TAG}}
