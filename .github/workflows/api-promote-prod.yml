@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Gets latest created release info
