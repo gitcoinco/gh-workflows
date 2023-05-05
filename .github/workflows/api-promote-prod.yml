@@ -27,11 +27,8 @@ jobs:
           makeLatest: true
 
   deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build
-        uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
-        with:
-          owner: lucianHymer
-          repo: workflowTest
-          commitish: ${{ steps.latest_release_info.outputs.tag }}
+    uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
+    with:
+      owner: lucianHymer
+      repo: workflowTest
+      commitish: ${{ steps.latest_release_info.outputs.tag }}
