@@ -14,6 +14,12 @@ jobs:
         uses: lucianHymer/get-current-release-action@v1.7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Echo
-        run: |
-          echo tag ${{ steps.latest_release_info.outputs.tag }}
+      - name: Release
+        # https://github.com/ncipollo/release-action
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.latest_release_info.outputs.tag }}
+          draft: false
+
