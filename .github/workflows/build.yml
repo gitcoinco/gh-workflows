@@ -26,6 +26,6 @@ jobs:
         run: |
           git fetch
           git checkout -b build 
-          git reset --hard ${input.commitish}
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${input.owner}/${input.repo}.git
+          git reset --hard ${inputs.commitish}
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${inputs.owner}/${inputs.repo}.git
           git push origin build -f
