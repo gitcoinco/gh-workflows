@@ -10,8 +10,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Gets latest created release info
+      - name: Get Latest Release
         id: latest_release_info
-        uses: lucianHymer/get-current-release-action@v1.6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+      - name: Echo
+        run: |
+          echo tag ${{ steps.latest_release_info.outputs.release }}
