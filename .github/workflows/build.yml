@@ -3,6 +3,9 @@ name: Build
 on:
   workflow_call:
     inputs:
+      token:
+        required: true
+        type: string
       commitish:
         required: true
         type: string
@@ -21,15 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ inputs.token }}
           ref: main
           fetch-depth: 0
       - name: Fake build
         run: |
           echo ${{ inputs.commitish }}
+          echo ${{ inputs.token }}
           git fetch
           git checkout -b build 
           git reset --hard ${{ inputs.commitish }}
           git reset HEAD -- .github/workflows
-          git remote set-url origin https://${{ secrets.TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
+          git remote set-url origin https://${{ inputs.token }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
           git push origin build -f

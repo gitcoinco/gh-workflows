@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
     inputs:
 
+env:
+  TOKEN: ${{ secrets.TOKEN }}
+
 permissions: write-all
 jobs:
   release:
@@ -13,7 +16,7 @@ jobs:
         id: latest_release_info
         uses: lucianHymer/get-current-release-action@v1.9
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ env.TOKEN }}
           owner: lucianHymer
           repo: workflowTest
       - name: Release
@@ -21,7 +24,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          token: ${{ secrets.TOKEN }}
+          token: ${{ env.TOKEN }}
           tag: ${{ steps.latest_release_info.outputs.tag }}
           draft: false
           makeLatest: true
@@ -43,3 +46,4 @@ jobs:
       owner: lucianHymer
       repo: workflowTest
       commitish: ${{ needs.release.outputs.tag }}
+      token: ${{ env.TOKEN }}
