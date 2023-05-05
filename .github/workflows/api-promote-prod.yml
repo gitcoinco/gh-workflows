@@ -6,7 +6,7 @@ on:
 
 permissions: write-all
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Gets latest created release info
@@ -25,4 +25,13 @@ jobs:
           tag: ${{ steps.latest_release_info.outputs.tag }}
           draft: false
           makeLatest: true
+  deploy:
+    jobs:
+      call-deploy-workflow:
+        uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
+        with:
+          owner: lucianHymer
+          repo: workflowTest
+          commitish: ${{ steps.latest_release_info.outputs.tag }}
+
 
