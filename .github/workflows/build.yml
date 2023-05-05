@@ -24,8 +24,9 @@ jobs:
           fetch-depth: 0
       - name: Fake build
         run: |
+          echo ${{ inputs.commitish} }
           git fetch
           git checkout -b build 
-          git reset --hard ${inputs.commitish}
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${inputs.owner}/${inputs.repo}.git
+          git reset --hard ${{ inputs.commitish }}
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
           git push origin build -f
