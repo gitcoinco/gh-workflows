@@ -8,14 +8,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Latest Release
-        id: latest_release
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: lucianHymer/workflowTest
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check output
-        env:
-          RELEASE_TAG: ${{ steps.latest_release.outputs.release }}
+      - name: Gets latest created release info
+        id: latest_release_info
+        uses: jossef/action-latest-release-info@v1.2.2
+
+      - name: Echo
         run: |
-          echo ${{env.RELEASE_TAG}}
+          echo tag ${{steps.latest_release_info.outputs.tag_name}}
