@@ -51,18 +51,3 @@ jobs:
           echo tag ${{ steps.version.outputs.version_tag }}
           echo version ${{ steps.version.outputs.version }}
 
-  test:
-    needs: [release]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Latest Release
-        id: latest_release
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: lucianHymer/workflowTest
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.latest_release.outputs.tag }}
-        run: |
-          echo ${{env.RELEASE_VERSION}}
