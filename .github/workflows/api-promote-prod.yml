@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
     inputs:
 
-env:
-  GITHUB_TOKEN: ${{ github.token }}
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,7 +11,5 @@ jobs:
       - name: Gets latest created release info
         id: latest_release_info
         uses: lucianHymer/get-current-release-action
-
-          # - name: Echo
-          #   run: |
-          #     echo tag ${{steps.latest_release_info.outputs.tag_name}}
+        with:
+          token: ${{ env.GITHUB_TOKEN }}
