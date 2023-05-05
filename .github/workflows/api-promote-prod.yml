@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Gets latest created release info
         id: latest_release_info
-        uses: lucianHymer/get-current-release-action@v1.6
+        uses: lucianHymer/get-current-release-action@v1.7
         with:
           token: ${{ env.GITHUB_TOKEN }}
       - name: Echo
