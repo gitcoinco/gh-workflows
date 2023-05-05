@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
     inputs:
 
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+
 jobs:
   test:
     runs-on: ubuntu-latest
