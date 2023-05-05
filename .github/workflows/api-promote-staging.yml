@@ -55,22 +55,14 @@ jobs:
     needs: [release]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Get Latest Release
+        id: latest_release
+        uses: pozetroninc/github-action-get-latest-release@master
         with:
-          fetch-depth: 0
-      - name: Load Vars
-        id: vars
-        run: echo "tag=$(git rev-list --tags --max-count=100 | xargs git describe --tags --match='v*.*' | grep -E '^v[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n1)" >> $GITHUB_OUTPUT
+          repository: lucianHymer/workflowTest
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check output
         env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.latest_release.outputs.tag }}
         run: |
           echo ${{env.RELEASE_VERSION}}
-          LATEST_TAG=$(git rev-list --tags --max-count=100 | xargs git describe --tags --match='v*.*' | grep -E '^v[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n1)
-          echo $LATEST_TAG
-
-          # get the last 100 commits that have a tag, most recent first
-          # get the actual tag text for tags in these commits that match v*.*
-          # filter to tags matching v0.0 or v0.0.0, because there will be sub-tags for subsequent commits before another release
-          # get the top one (latest)
-          echo `git rev-list --tags --max-count=100 | xargs git describe --tags --match='v*.*' | grep -E '^v[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -n1`
