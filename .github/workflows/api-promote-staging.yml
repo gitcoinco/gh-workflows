@@ -18,28 +18,9 @@ jobs:
           fetch-depth: 0
       - name: Set output
         id: vars
-        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: echo "tag=${git describe --tags --match='v*.*'}" >> $GITHUB_OUTPUT
       - name: Check output
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo $RELEASE_VERSION
-          echo "tag"
-          echo ${{ steps.vars.outputs.tag }}
-          echo "ref"
-          echo ${{ github.ref }}
-          echo "head_ref"
-          echo ${{ github.head_ref }}
-          echo "base_ref"
-          echo ${{ github.base_ref }}
-          echo "ref_name"
-          echo ${{ github.ref_name }}
-          echo "ref_type"
-          echo ${{ github.ref_type }}
-          echo "action_ref"
-          echo ${{ github.action_ref }}
-          echo "action"
-          echo ${{ github.action }}
-          echo "tag2"
-          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo $LATEST_TAG
+          echo ${{ env.RELEASE_VERSION }}
