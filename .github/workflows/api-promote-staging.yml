@@ -40,3 +40,6 @@ jobs:
           echo ${{ github.action_ref }}
           echo "action"
           echo ${{ github.action }}
+          echo "tag2"
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo $LATEST_TAG
