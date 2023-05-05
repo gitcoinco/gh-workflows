@@ -1,7 +1,6 @@
 name: Deploy API to Staging
 
 on:
-  commit:
   workflow_dispatch:
     # inputs:
     #   commit:
