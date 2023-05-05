@@ -4,13 +4,14 @@ on:
   workflow_dispatch:
     inputs:
 
+permissions: write-all
+
 jobs:
   test:
-    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Gets latest created release info
         id: latest_release_info
         uses: lucianHymer/get-current-release-action@v1.6
         with:
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
