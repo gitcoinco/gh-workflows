@@ -24,3 +24,4 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           echo ${{ env.RELEASE_VERSION }}
+          echo tag=`${git describe --tags --match='v*.*'`
