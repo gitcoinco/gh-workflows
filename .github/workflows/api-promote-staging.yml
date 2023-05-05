@@ -51,6 +51,7 @@ jobs:
           echo version ${{ steps.version.outputs.version }}
 
   test:
+    needs: [release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
