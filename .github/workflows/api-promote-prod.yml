@@ -43,4 +43,5 @@ jobs:
       owner: lucianHymer
       repo: workflowTest
       commitish: ${{ needs.release.outputs.tag }}
+    secrets:
       token: ${{ secrets.TOKEN }}
