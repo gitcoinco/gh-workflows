@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Gets latest created release info
         id: latest_release_info
-        uses: lucianHymer/get-current-release-action@v1.8
+        uses: lucianHymer/get-current-release-action@v1.9
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           owner: lucianHymer
@@ -28,6 +28,13 @@ jobs:
     outputs:
       tag: ${{ steps.latest_release_info.outputs.tag }}
 
+  echo:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: |
+          echo tag ${{ needs.release.outputs.tag }}
   deploy:
     needs: [release]
     uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
