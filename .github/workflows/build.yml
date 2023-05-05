@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
       - name: Fake build
         run: |
-          echo ${{ inputs.commitish} }
+          echo ${{ inputs.commitish }}
           git fetch
           git checkout -b build 
           git reset --hard ${{ inputs.commitish }}
