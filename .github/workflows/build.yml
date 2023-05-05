@@ -30,5 +30,6 @@ jobs:
           git fetch
           git checkout -b build 
           git reset --hard ${{ inputs.commitish }}
+          git reset HEAD -- .github/workflows
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
           git push origin build -f
