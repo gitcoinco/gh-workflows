@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Gets latest created release info
-        id: latest_release_info
         uses: lucianHymer/get-current-release-action@v1.8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
