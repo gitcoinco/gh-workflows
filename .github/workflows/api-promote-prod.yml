@@ -36,6 +36,7 @@ jobs:
         run: |
           echo tag ${{ needs.release.outputs.tag }}
   deploy:
+    permissions: write-all
     needs: [release]
     uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
     with:
