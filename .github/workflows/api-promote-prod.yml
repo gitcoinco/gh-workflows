@@ -22,5 +22,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.latest_release_info.outputs.tag }}
           draft: false
-          latest: true
+          makeLatest: true
 
