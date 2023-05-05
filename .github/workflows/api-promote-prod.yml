@@ -25,12 +25,13 @@ jobs:
           tag: ${{ steps.latest_release_info.outputs.tag }}
           draft: false
           makeLatest: true
+
   deploy:
-    call-deploy-workflow:
-      uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
-      with:
-        owner: lucianHymer
-        repo: workflowTest
-        commitish: ${{ steps.latest_release_info.outputs.tag }}
-
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        uses: lucianHymer/workflowTest/.github/workflows/build.yml@main
+        with:
+          owner: lucianHymer
+          repo: workflowTest
+          commitish: ${{ steps.latest_release_info.outputs.tag }}
