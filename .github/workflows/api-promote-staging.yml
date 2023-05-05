@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Set output
         id: vars
-        run: echo "tag=${git describe --tags --match='v*.*'}" >> $GITHUB_OUTPUT
+        run: echo tag=`${git describe --tags --match='v*.*'` >> $GITHUB_OUTPUT
       - name: Check output
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
