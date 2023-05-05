@@ -39,7 +39,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          # token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
