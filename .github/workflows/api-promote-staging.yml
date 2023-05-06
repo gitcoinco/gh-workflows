@@ -37,8 +37,8 @@ jobs:
 
       - name: Tag Draft
         run: |
-          git tag -d draft-{{ steps.version.outputs.version }} || echo "Creating tag for the first time"
-          git tag draft-{{ steps.version.outputs.version }}
+          git tag -d draft-${{ steps.version.outputs.version }} || echo "Creating tag for the first time"
+          git tag draft-${{ steps.version.outputs.version }}
           git remote set-url origin https://${{ secrets.TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
           git push --follow-tags origin
 
