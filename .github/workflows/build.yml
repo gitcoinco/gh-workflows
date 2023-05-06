@@ -12,6 +12,9 @@ on:
       repo:
         required: true
         type: string
+    secrets:
+      token:
+        required: true
 
 
 permissions: write-all
