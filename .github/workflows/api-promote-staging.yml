@@ -35,7 +35,19 @@ jobs:
           bump_each_commit: false
           user_format_type: "csv"
 
-      - name: Release
+      - name: Tag Draft
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.TOKEN }}
+          ref: main
+          fetch-depth: 0
+        run: |
+          git tag -d draft-{{ steps.version.outputs.version }} || echo "Creating tag for the first time"
+          git tag draft-{{ steps.version.outputs.version }}
+          git remote set-url origin https://${{ secrets.TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
+          git push --follow-tags origin
+
+      - name: Release Draft
         # https://github.com/ncipollo/release-action
         uses: ncipollo/release-action@v1
         with:
