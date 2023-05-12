@@ -13,10 +13,8 @@ on:
 jobs:
   release:
     permissions: write-all
-    # needs: [deploy-staging]
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
           ref: main
@@ -27,13 +25,8 @@ jobs:
         id: version
         uses: paulhatch/semantic-version@v5.0.2
         with:
-          tag_prefix: "v"
           major_pattern: "(MAJOR)"
-          major_regexp_flags: ""
           minor_pattern: "(MINOR)"
-          minor_regexp_flags: ""
-          bump_each_commit: false
-          user_format_type: "csv"
 
       - name: Release Draft
         # https://github.com/ncipollo/release-action
