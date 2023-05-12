@@ -36,7 +36,7 @@ on:
         required: true
 
 jobs:
-  deploy_to_aws:
+  (Backend) Deploy to AWS:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

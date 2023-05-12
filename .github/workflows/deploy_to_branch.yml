@@ -19,7 +19,7 @@ on:
 
 permissions: write-all
 jobs:
-  deploy_to_branch:
+  (Frontend) Deploy to Branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
