@@ -18,9 +18,17 @@ on:
     secrets:
       token:
         required: true
+      aws_access_key_id_production:
+        required: true
+      aws_secret_access_key_production:
+        required: true
+      aws_access_key_id_staging:
+        required: true
+      aws_secret_access_key_staging:
+        required: true
 
 jobs:
-  release:
+  test-and-release:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +38,23 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
+
+      - name: Lerna Bootstrap
+        run: echo lerna bootstrap
+
+      - name: Run Tests
+        run: |
+          echo yarn test
+
+      - name: Run Linter
+        run: |
+          echo yarn lint
+
       - name: Version
         # https://github.com/marketplace/actions/git-semantic-version
         id: version
@@ -38,7 +63,7 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
 
-      - name: Release Draft
+      - name: Release
         # https://github.com/ncipollo/release-action
         uses: ncipollo/release-action@v1
         with:
@@ -48,13 +73,14 @@ jobs:
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
 
-      - name: Print Version
-        run: |
-          echo tag ${{ steps.version.outputs.version_tag }}
-          echo version ${{ steps.version.outputs.version }}
+      - name: Store Commit SHA
+        id: sha
+        shell: bash
+        run: echo "::set-output name=sha_short::$(git rev-parse --short ${{ steps.version.outputs.version_tag }})"
 
     outputs:
       version_tag: ${{ steps.version.outputs.version_tag }}
+      commit_sha: ${{ steps.sha.outputs.sha_short }}
 
   deploy_staging_frontend:
     permissions: write-all
@@ -68,20 +94,18 @@ jobs:
     secrets:
       token: ${{ secrets.TOKEN }}
 
-  deploy_staging_backend:
+  dockerize:
     needs: [release]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Release Staging Backend
-        run: |
-          echo "Backend Release Complete version: " ${{ needs.release.outputs.version_tag }}
-      # uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
-      # with:
-      #   owner: lucianHymer
-      #   repo: workflowTest
-      #   commitish: ${{ needs.release.outputs.version_tag }}
-      # secrets:
-      #   token: ${{ secrets.TOKEN }}
+    uses: lucianHymer/workflowTest/.github/workflows/dockerize.yml@main
+    with:
+      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      commitish: ${{ needs.release.outputs.version_tag }}
+      docker_tag: ${{ inputs.staging_frontend_branch }}
+    secrets:
+      aws_access_key_id_staging: ${{ secrets.aws_access_key_id_staging }}
+      aws_secret_access_key_staging:${{ secrets.aws_secret_access_key_staging }}
+
+  deploy_staging_backend:
 
   wait_for_production_approval:
     needs: [deploy_staging_backend,deploy_staging_frontend,release]
@@ -98,4 +122,4 @@ jobs:
     steps:
       - name: Release to Production
         run: |
-          echo "Production Release Complete version: " ${{ needs.release.outputs.version_tag }}
+          echo "Production Release Complete version: " ${{ needs.release.outputs.version_tag }} ${{ needs.release.outputs.commit_sha }}

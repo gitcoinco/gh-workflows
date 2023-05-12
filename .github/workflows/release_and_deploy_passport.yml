@@ -3,7 +3,8 @@ name: Release and Deploy Passport
 ## To use this in a new repo
 ## 1. Copy this file
 ## 2. create a personal access token (with all relevant permissions including workflow write) and add to the gh secrets as TOKEN
-## 3. Create an environment called "production" and add Required Reviewers
+## 3. Configure other secrets shown below
+## 4. Create an environment called "production" and add Required Reviewers
 
 on:
   workflow_dispatch:
@@ -19,3 +20,7 @@ jobs:
       production_frontend_branch: frontend_build_prod
     secrets:
       token: ${{ secrets.TOKEN }}
+      aws_access_key_id_production: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
+      aws_secret_access_key_production: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
+      aws_access_key_id_staging: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+      aws_secret_access_key_staging: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}

@@ -1,4 +1,4 @@
-name: Push to Branch (Release Frontend)
+name: Deploy to Branch (Release Frontend)
 
 on:
   workflow_call:
@@ -22,7 +22,7 @@ on:
 
 permissions: write-all
 jobs:
-  push_to_branch:
+  deploy_to_branch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
