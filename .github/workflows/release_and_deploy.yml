@@ -64,7 +64,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.action_access_token }}
           generateReleaseNotes: true
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
@@ -88,7 +88,7 @@ jobs:
       refspec: ${{ needs.release.outputs.version_tag }}
       destination_branch: ${{ inputs.staging_frontend_branch }}
     secrets:
-      token: ${{ secrets.TOKEN }}
+      action_access_token: ${{ secrets.action_access_token }}
 
   dockerize:
     needs: [release]
