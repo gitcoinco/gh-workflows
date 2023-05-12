@@ -1,14 +1,9 @@
-name: Deploy API to Staging
+name: Release and Deploy
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   commit:
-    #     description: "Branch/Commit ref"
-    #     default: ""
-    #     required: true
-    #     type: string
-    #
+
+## Must create a personal access token and add to the gh secrets as TOKEN
 
 jobs:
   release:
@@ -33,26 +28,52 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
           generateReleaseNotes: true
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
 
-      - name: Echo
+      - name: Print Version
         run: |
           echo tag ${{ steps.version.outputs.version_tag }}
           echo version ${{ steps.version.outputs.version }}
-      - name: Release to Staging
-        run: |
-          echo "Staging Release Complete version: " ${{ steps.version.outputs.version_tag }}
 
     outputs:
       version_tag: ${{ steps.version.outputs.version_tag }}
 
-  deploy:
+  deploy_staging_frontend:
+    needs: [release]
+    uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
+    with:
+      owner: lucianHymer
+      repo: workflowTest
+      commitish: ${{ needs.release.outputs.version_tag }}
+    secrets:
+      token: ${{ secrets.TOKEN }}
+
+  deploy_staging_backend:
     needs: [release]
     runs-on: ubuntu-latest
+    steps:
+      - name: Release Staging Backend
+        run: |
+          echo "Backend Release Complete version: " ${{ needs.release.outputs.version_tag }}
+      # uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
+      # with:
+      #   owner: lucianHymer
+      #   repo: workflowTest
+      #   commitish: ${{ needs.release.outputs.version_tag }}
+      # secrets:
+      #   token: ${{ secrets.TOKEN }}
+
+  wait_for_production_approval:
+    needs: [deploy_staging_backend,deploy_staging_frontend]
+    runs-on: ubuntu-latest
     environment: Production
+
+  deploy_production:
+    needs: [wait_for_production_approval,release]
+    runs-on: ubuntu-latest
     steps:
       - name: Release to Production
         run: |
