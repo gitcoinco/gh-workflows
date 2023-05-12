@@ -15,6 +15,12 @@ on:
       production_frontend_branch:
         required: true
         type: string
+      staging_domain: 
+        required: true
+        type: string
+      production_domain:
+        required: true
+        type: string
     secrets:
       token:
         required: true
@@ -25,6 +31,28 @@ on:
       aws_access_key_id_staging:
         required: true
       aws_secret_access_key_staging:
+        required: true
+      PULUMI_ACCESS_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID_PRODUCTION: 
+        required: true
+      AWS_ACCESS_KEY_ID_STAGING:
+        required: true
+      AWS_SECRET_ACCESS_KEY_PRODUCTION:
+        required: true
+      AWS_SECRET_ACCESS_KEY_STAGING:
+        required: true
+      ECR_URL_PRODUCTION:
+        required: true
+      ECR_URL_STAGING:
+        required: true
+      ROUTE53_ZONE_ID_PRODUCTION:
+        required: true
+      ROUTE53_ZONE_ID_STAGING:
+        required: true
+      IAM_SERVER_SSM_ARN_PRODUCTION:
+        required: true
+      IAM_SERVER_SSM_ARN_STAGING:
         required: true
 
 jobs:
@@ -89,7 +117,7 @@ jobs:
     with:
       owner: ${{ inputs.repo_owner }}
       repo: ${{ inputs.repo_name }}
-      commitish: ${{ needs.release.outputs.version_tag }}
+      refspec: ${{ needs.release.outputs.version_tag }}
       destination_branch: ${{ inputs.staging_frontend_branch }}
     secrets:
       token: ${{ secrets.TOKEN }}
@@ -99,13 +127,28 @@ jobs:
     uses: lucianHymer/workflowTest/.github/workflows/dockerize.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-      commitish: ${{ needs.release.outputs.version_tag }}
+      refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ inputs.staging_frontend_branch }}
     secrets:
-      aws_access_key_id_staging: ${{ secrets.aws_access_key_id_staging }}
-      aws_secret_access_key_staging:${{ secrets.aws_secret_access_key_staging }}
+      aws_access_key_id: ${{ secrets.aws_access_key_id_staging }}
+      aws_secret_access_key:${{ secrets.aws_secret_access_key_staging }}
 
   deploy_staging_backend:
+    needs: [release]
+    uses: lucianHymer/workflowTest/.github/workflows/dockerize.yml@main
+    with:
+      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      refspec: ${{ needs.release.outputs.version_tag }}
+      docker_tag: ${{ inputs.staging_frontend_branch }}
+      env_name: staging
+      domain: ${{ inputs.staging_domain }}
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+      ECR_URL: ${{secrets.ECR_URL_STAGING}}
+      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
+      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
 
   wait_for_production_approval:
     needs: [deploy_staging_backend,deploy_staging_frontend,release]
