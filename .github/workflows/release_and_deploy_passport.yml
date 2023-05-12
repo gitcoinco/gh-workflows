@@ -13,8 +13,8 @@ jobs:
     permissions: write-all
     uses: lucianHymer/workflowTest/.github/workflows/release_and_deploy.yml@main
     with:
-      owner: lucianHymer
-      repo: workflowTest
+      repo_owner: lucianHymer
+      repo_name: workflowTest
       staging_frontend_branch: frontend_build_staging
       production_frontend_branch: frontend_build_prod
     secrets:
