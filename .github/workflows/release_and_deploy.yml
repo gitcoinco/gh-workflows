@@ -1,7 +1,5 @@
 name: Release and Deploy
 
-## Must create a personal access token and add to the gh secrets as TOKEN
-
 on:
   workflow_dispatch:
     inputs:
@@ -88,7 +86,7 @@ jobs:
   wait_for_production_approval:
     needs: [deploy_staging_backend,deploy_staging_frontend,release]
     runs-on: ubuntu-latest
-    environment: Production
+    environment: production
     steps:
       - name: Approve Release to Production
         run: |

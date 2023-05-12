@@ -1,6 +1,9 @@
 name: Release and Deploy Passport
 
-## Must create a personal access token and add to the gh secrets as TOKEN
+## To use this in a new repo
+## 1. Copy this file
+## 2. create a personal access token (with all relevant permissions including workflow write) and add to the gh secrets as TOKEN
+## 3. Create an environment called "production" and add Required Reviewers
 
 on:
   workflow_dispatch:
