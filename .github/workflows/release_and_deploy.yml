@@ -24,29 +24,6 @@ on:
       ecr_repository:
         required: true
         type: string
-    secrets:
-      aws_access_key_id_production:
-        required: true
-      aws_secret_access_key_production:
-        required: true
-      aws_access_key_id_staging:
-        required: true
-      aws_secret_access_key_staging:
-        required: true
-      PULUMI_ACCESS_TOKEN:
-        required: true
-      ECR_URL_PRODUCTION:
-        required: true
-      ECR_URL_STAGING:
-        required: true
-      ROUTE53_ZONE_ID_PRODUCTION:
-        required: true
-      ROUTE53_ZONE_ID_STAGING:
-        required: true
-      IAM_SERVER_SSM_ARN_PRODUCTION:
-        required: true
-      IAM_SERVER_SSM_ARN_STAGING:
-        required: true
 
 jobs:
   release:
@@ -123,9 +100,7 @@ jobs:
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ inputs.staging_frontend_branch }}
       ecr_repository: ${{ inputs.ecr_repository }}
-    secrets:
-      aws_access_key_id: ${{ secrets.aws_access_key_id_staging }}
-      aws_secret_access_key: ${{ secrets.aws_secret_access_key_staging }}
+    secrets: inherit
 
   deploy_staging_backend:
     needs: [release,dockerize]
@@ -136,13 +111,7 @@ jobs:
       docker_tag: ${{ inputs.staging_frontend_branch }}
       env_name: staging
       domain: ${{ inputs.staging_domain }}
-    secrets:
-      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-      ECR_URL: ${{secrets.ECR_URL_STAGING}}
-      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
-      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
+    secrets: inherit
 
   wait_for_production_approval:
     needs: [deploy_staging_backend,deploy_staging_frontend,release]
