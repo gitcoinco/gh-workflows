@@ -21,39 +21,7 @@ on:
       production_domain:
         required: true
         type: string
-    secrets:
-      token:
-        required: true
-      aws_access_key_id_production:
-        required: true
-      aws_secret_access_key_production:
-        required: true
-      aws_access_key_id_staging:
-        required: true
-      aws_secret_access_key_staging:
-        required: true
-      PULUMI_ACCESS_TOKEN:
-        required: true
-      AWS_ACCESS_KEY_ID_PRODUCTION: 
-        required: true
-      AWS_ACCESS_KEY_ID_STAGING:
-        required: true
-      AWS_SECRET_ACCESS_KEY_PRODUCTION:
-        required: true
-      AWS_SECRET_ACCESS_KEY_STAGING:
-        required: true
-      ECR_URL_PRODUCTION:
-        required: true
-      ECR_URL_STAGING:
-        required: true
-      ROUTE53_ZONE_ID_PRODUCTION:
-        required: true
-      ROUTE53_ZONE_ID_STAGING:
-        required: true
-      IAM_SERVER_SSM_ARN_PRODUCTION:
-        required: true
-      IAM_SERVER_SSM_ARN_STAGING:
-        required: true
+    secrets: inherit
 
 jobs:
   test-and-release:
@@ -113,7 +81,7 @@ jobs:
   deploy_staging_frontend:
     permissions: write-all
     needs: [release]
-    uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/push_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
       repo: ${{ inputs.repo_name }}
@@ -124,25 +92,24 @@ jobs:
 
   dockerize:
     needs: [release]
-    uses: lucianHymer/workflowTest/.github/workflows/dockerize.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ inputs.staging_frontend_branch }}
-    secrets:
       aws_access_key_id: ${{ secrets.aws_access_key_id_staging }}
       aws_secret_access_key: ${{ secrets.aws_secret_access_key_staging }}
+      ecr_repository: ${{ inputs.ecr_repository }}
 
   deploy_staging_backend:
     needs: [release,dockerize]
-    uses: lucianHymer/workflowTest/.github/workflows/dockerize.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ inputs.staging_frontend_branch }}
       env_name: staging
       domain: ${{ inputs.staging_domain }}
-    secrets:
       PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
