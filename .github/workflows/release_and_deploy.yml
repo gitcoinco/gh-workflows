@@ -26,7 +26,7 @@ on:
         type: string
 
 jobs:
-  Release:
+  release:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -121,7 +121,7 @@ jobs:
       ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
 
-  Wait for Production Approval:
+  wait_for_production_approval:
     needs: [deploy_staging_backend,deploy_staging_frontend,release]
     runs-on: ubuntu-latest
     environment: production
