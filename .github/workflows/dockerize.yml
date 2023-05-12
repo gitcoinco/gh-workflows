@@ -18,6 +18,11 @@ on:
       ecr_repository:
         required: true
         type: string
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
 
 jobs:
   dockerize:

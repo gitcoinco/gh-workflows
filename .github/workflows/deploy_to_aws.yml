@@ -21,6 +21,19 @@ on:
       domain:
         required: true
         type: string
+    secrets:
+      PULUMI_ACCESS_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      ECR_URL:
+        required: true
+      ROUTE53_ZONE_ID:
+        required: true
+      IAM_SERVER_SSM_ARN:
+        required: true
 
 jobs:
   deploy_to_aws:
