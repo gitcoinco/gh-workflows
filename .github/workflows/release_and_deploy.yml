@@ -68,7 +68,7 @@ jobs:
           allowUpdates: true
           token: ${{ secrets.github_token }}
           generateReleaseNotes: true
-          name: Scorer API ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
 
       - name: Store Commit SHA
