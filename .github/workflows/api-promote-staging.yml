@@ -42,6 +42,7 @@ jobs:
       version_tag: ${{ steps.version.outputs.version_tag }}
 
   deploy_staging_frontend:
+    permissions: write-all
     needs: [release]
     uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
     with:
