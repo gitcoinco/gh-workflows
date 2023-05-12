@@ -48,6 +48,7 @@ jobs:
       owner: lucianHymer
       repo: workflowTest
       commitish: ${{ needs.release.outputs.version_tag }}
+      destination_branch: frontend_build_staging
     secrets:
       token: ${{ secrets.TOKEN }}
 
