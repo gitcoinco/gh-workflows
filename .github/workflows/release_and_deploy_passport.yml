@@ -1,4 +1,4 @@
-name: Release and Deploy
+name: Release and Deploy Passport
 
 ## Must create a personal access token and add to the gh secrets as TOKEN
 
