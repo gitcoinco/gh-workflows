@@ -3,7 +3,7 @@ name: Deploy to Branch (Release Frontend)
 on:
   workflow_call:
     inputs:
-      commitish:
+      refspec:
         required: true
         type: string
       owner:
@@ -32,10 +32,10 @@ jobs:
           fetch-depth: 0
       - name: Fake build
         run: |
-          echo ${{ inputs.commitish }}
+          echo ${{ inputs.refspec }}
           git fetch
           git checkout -b ${{ inputs.destination_branch }} 
-          git reset --hard ${{ inputs.commitish }}
+          git reset --hard ${{ inputs.refspec }}
           git reset HEAD -- .github/workflows
           git remote set-url origin https://${{ secrets.action_access_token }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
           git push origin ${{ inputs.destination_branch }} -f
