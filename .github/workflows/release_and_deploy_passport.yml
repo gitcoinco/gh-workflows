@@ -23,7 +23,7 @@ jobs:
       production_domain: passport-iam.gitcoin.co
       ecr_repository: passport
     secrets:
-      token: ${{ secrets.TOKEN }}
+      action_access_token: ${{ secrets.action_access_token }}
       aws_access_key_id_production: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
       aws_secret_access_key_production: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
       aws_access_key_id_staging: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
