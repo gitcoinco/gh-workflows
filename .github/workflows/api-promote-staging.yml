@@ -35,13 +35,6 @@ jobs:
           bump_each_commit: false
           user_format_type: "csv"
 
-      - name: Tag Draft
-        run: |
-          git tag -d draft-${{ steps.version.outputs.version }} || echo "Creating tag for the first time"
-          git tag draft-${{ steps.version.outputs.version }}
-          git remote set-url origin https://${{ secrets.TOKEN }}@github.com/${{ inputs.owner }}/${{ inputs.repo }}.git
-          git push --follow-tags origin
-
       - name: Release Draft
         # https://github.com/ncipollo/release-action
         uses: ncipollo/release-action@v1
@@ -51,10 +44,15 @@ jobs:
           generateReleaseNotes: true
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
-          draft: true
 
       - name: Echo
         run: |
           echo tag ${{ steps.version.outputs.version_tag }}
           echo version ${{ steps.version.outputs.version }}
 
+      - name: Release to Staging
+        run: echo "Staging Release Complete"
+
+      - name: Release to Production
+        environment: Production
+        run: echo "Production Release Complete"
