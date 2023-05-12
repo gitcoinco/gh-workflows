@@ -1,7 +1,7 @@
 name: Release and Deploy
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       repo_owner:
         required: true
