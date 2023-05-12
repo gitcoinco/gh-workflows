@@ -97,7 +97,9 @@ jobs:
       - name: Store Commit SHA
         id: sha
         shell: bash
-        run: echo "::set-output name=sha_short::$(git rev-parse --short ${{ steps.version.outputs.version_tag }})"
+        run: |
+          git pull --tags
+          echo "::set-output name=sha_short::$(git rev-parse --short ${{ steps.version.outputs.version_tag }})"
 
     outputs:
       version_tag: ${{ steps.version.outputs.version_tag }}
