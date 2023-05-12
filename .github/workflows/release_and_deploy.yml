@@ -81,7 +81,7 @@ jobs:
   deploy_staging_frontend:
     permissions: write-all
     needs: [release]
-    uses: gitcoinco/gh-workflows/.github/workflows/push_to_branch.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
       repo: ${{ inputs.repo_name }}
