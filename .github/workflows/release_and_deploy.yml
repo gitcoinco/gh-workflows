@@ -51,7 +51,7 @@ on:
         required: true
 
 jobs:
-  test-and-release:
+  release:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
