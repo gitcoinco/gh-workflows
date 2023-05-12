@@ -17,8 +17,8 @@ jobs:
     with:
       repo_owner: lucianHymer
       repo_name: workflowTest
-      staging_frontend_branch: frontend_build_staging
-      production_frontend_branch: frontend_build_prod
+      staging_frontend_branch: test_frontend_build_staging
+      production_frontend_branch: test_frontend_build_prod
       staging_domain: staging.passport-iam.gitcoin.co
       production_domain: passport-iam.gitcoin.co
     secrets:

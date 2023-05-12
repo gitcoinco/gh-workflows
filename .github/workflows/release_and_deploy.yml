@@ -131,7 +131,7 @@ jobs:
       docker_tag: ${{ inputs.staging_frontend_branch }}
     secrets:
       aws_access_key_id: ${{ secrets.aws_access_key_id_staging }}
-      aws_secret_access_key:${{ secrets.aws_secret_access_key_staging }}
+      aws_secret_access_key: ${{ secrets.aws_secret_access_key_staging }}
 
   deploy_staging_backend:
     needs: [release]
