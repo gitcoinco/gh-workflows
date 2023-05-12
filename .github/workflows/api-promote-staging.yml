@@ -49,10 +49,16 @@ jobs:
         run: |
           echo tag ${{ steps.version.outputs.version_tag }}
           echo version ${{ steps.version.outputs.version }}
-
       - name: Release to Staging
-        run: echo "Staging Release Complete"
+        run: echo "Staging Release Complete version: " ${{ steps.version.outputs.version_tag }}
 
+    outputs:
+      version_tag: ${{ steps.version.outputs.version_tag }}
+
+  deploy:
+    needs: [release]
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
       - name: Release to Production
-        environment: Production
-        run: echo "Production Release Complete"
+        run: echo "Production Release Complete version: " ${{ needs.release.outputs.version_tag }}
