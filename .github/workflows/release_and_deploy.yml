@@ -21,7 +21,6 @@ on:
       production_domain:
         required: true
         type: string
-    secrets: inherit
 
 jobs:
   test-and-release:
