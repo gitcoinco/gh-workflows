@@ -99,7 +99,6 @@ jobs:
         shell: bash
         run: |
           git pull --tags
-          echo "::set-output name=::"
           echo "sha_short=$(git rev-parse --short ${{ steps.version.outputs.version_tag }})" >> $GITHUB_OUTPUT
 
     outputs:
