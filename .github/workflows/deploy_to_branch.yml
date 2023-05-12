@@ -15,9 +15,6 @@ on:
       destination_branch:
         required: true
         type: string
-    secrets:
-      github_token:
-        required: true
 
 
 permissions: write-all

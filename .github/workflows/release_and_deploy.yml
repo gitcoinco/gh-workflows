@@ -25,8 +25,6 @@ on:
         required: true
         type: string
     secrets:
-      github_token:
-        required: true
       aws_access_key_id_production:
         required: true
       aws_secret_access_key_production:
@@ -114,8 +112,6 @@ jobs:
       repo: ${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       destination_branch: ${{ inputs.staging_frontend_branch }}
-    secrets:
-      github_token: ${{ secrets.github_token }}
 
   dockerize:
     needs: [release]
