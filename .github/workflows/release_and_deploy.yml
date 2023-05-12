@@ -131,7 +131,7 @@ jobs:
 
   deploy_staging_backend:
     needs: [release,dockerize]
-    uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
