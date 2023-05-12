@@ -25,7 +25,7 @@ on:
         required: true
         type: string
     secrets:
-      action_access_token:
+      github_token:
         required: true
       aws_access_key_id_production:
         required: true
@@ -91,7 +91,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          token: ${{ secrets.action_access_token }}
+          token: ${{ secrets.github_token }}
           generateReleaseNotes: true
           name: Scorer API ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
@@ -115,7 +115,7 @@ jobs:
       refspec: ${{ needs.release.outputs.version_tag }}
       destination_branch: ${{ inputs.staging_frontend_branch }}
     secrets:
-      action_access_token: ${{ secrets.action_access_token }}
+      github_token: ${{ secrets.github_token }}
 
   dockerize:
     needs: [release]
