@@ -21,6 +21,9 @@ on:
       production_domain:
         required: true
         type: string
+      ecr_repository:
+        required: true
+        type: string
     secrets:
       action_access_token:
         required: true
