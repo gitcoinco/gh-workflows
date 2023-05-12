@@ -1,9 +1,25 @@
 name: Release and Deploy
 
+## Must create a personal access token and add to the gh secrets as TOKEN
+
 on:
   workflow_dispatch:
-
-## Must create a personal access token and add to the gh secrets as TOKEN
+    inputs:
+      repo_owner:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+      staging_frontend_branch:
+        required: true
+        type: string
+      production_frontend_branch:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
 
 jobs:
   release:
@@ -12,6 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
           ref: main
           fetch-depth: 0
 
@@ -46,10 +63,10 @@ jobs:
     needs: [release]
     uses: lucianHymer/workflowTest/.github/workflows/push_to_branch.yml@main
     with:
-      owner: lucianHymer
-      repo: workflowTest
+      owner: ${{ inputs.repo_owner }}
+      repo: ${{ inputs.repo_name }}
       commitish: ${{ needs.release.outputs.version_tag }}
-      destination_branch: frontend_build_staging
+      destination_branch: ${{ inputs.staging_frontend_branch }}
     secrets:
       token: ${{ secrets.TOKEN }}
 
