@@ -21,6 +21,39 @@ on:
       production_domain:
         required: true
         type: string
+    secrets:
+      action_access_token:
+        required: true
+      aws_access_key_id_production:
+        required: true
+      aws_secret_access_key_production:
+        required: true
+      aws_access_key_id_staging:
+        required: true
+      aws_secret_access_key_staging:
+        required: true
+      PULUMI_ACCESS_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID_PRODUCTION: 
+        required: true
+      AWS_ACCESS_KEY_ID_STAGING:
+        required: true
+      AWS_SECRET_ACCESS_KEY_PRODUCTION:
+        required: true
+      AWS_SECRET_ACCESS_KEY_STAGING:
+        required: true
+      ECR_URL_PRODUCTION:
+        required: true
+      ECR_URL_STAGING:
+        required: true
+      ROUTE53_ZONE_ID_PRODUCTION:
+        required: true
+      ROUTE53_ZONE_ID_STAGING:
+        required: true
+      IAM_SERVER_SSM_ARN_PRODUCTION:
+        required: true
+      IAM_SERVER_SSM_ARN_STAGING:
+        required: true
 
 jobs:
   test-and-release:
