@@ -67,9 +67,13 @@ jobs:
       #   token: ${{ secrets.TOKEN }}
 
   wait_for_production_approval:
-    needs: [deploy_staging_backend,deploy_staging_frontend]
+    needs: [deploy_staging_backend,deploy_staging_frontend,release]
     runs-on: ubuntu-latest
     environment: Production
+    steps:
+      - name: Approve Release to Production
+        run: |
+          echo "Approved Production Release for: " ${{ needs.release.outputs.version_tag }}
 
   deploy_production:
     needs: [wait_for_production_approval,release]
