@@ -34,14 +34,6 @@ on:
         required: true
       PULUMI_ACCESS_TOKEN:
         required: true
-      AWS_ACCESS_KEY_ID_PRODUCTION: 
-        required: true
-      AWS_ACCESS_KEY_ID_STAGING:
-        required: true
-      AWS_SECRET_ACCESS_KEY_PRODUCTION:
-        required: true
-      AWS_SECRET_ACCESS_KEY_STAGING:
-        required: true
       ECR_URL_PRODUCTION:
         required: true
       ECR_URL_STAGING:
