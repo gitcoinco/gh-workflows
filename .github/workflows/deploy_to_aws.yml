@@ -21,24 +21,19 @@ on:
       domain:
         required: true
         type: string
+    secrets:
       PULUMI_ACCESS_TOKEN:
         required: true
-        type: string
       AWS_ACCESS_KEY_ID:
         required: true
-        type: string
       AWS_SECRET_ACCESS_KEY:
         required: true
-        type: string
       ECR_URL:
         required: true
-        type: string
       ROUTE53_ZONE_ID:
         required: true
-        type: string
       IAM_SERVER_SSM_ARN:
         required: true
-        type: string
 
 jobs:
   deploy_to_aws:
@@ -60,7 +55,7 @@ jobs:
           pulumi config -s gitcoin/dpopp/${{ inputs.env_name }} set aws:region us-east-1 --non-interactive
         working-directory: infra/${{ inputs.env_name }}
         env:
-          PULUMI_ACCESS_TOKEN: ${{ inputs.PULUMI_ACCESS_TOKEN }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
             # - uses: pulumi/actions@v3
             #   id: pulumi
             #   with:
@@ -71,10 +66,10 @@ jobs:
             #   env:
       - name: echo
         run: |
-          echo PULUMI_ACCESS_TOKEN: ${{ inputs.PULUMI_ACCESS_TOKEN }}
-          echo AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY }}
-          echo AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-          echo DOCKER_GTC_PASSPORT_IAM_IMAGE: ${{inputs.ECR_URL}}:${{ inputs.docker_tag }}
-          echo ROUTE_53_ZONE: ${{ inputs.ROUTE53_ZONE_ID }}
+          echo PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          echo AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          echo AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          echo DOCKER_GTC_PASSPORT_IAM_IMAGE: ${{secrets.ECR_URL}}:${{ inputs.docker_tag }}
+          echo ROUTE_53_ZONE: ${{ secrets.ROUTE53_ZONE_ID }}
           echo DOMAIN: ${{ inputs.domain }}
-          echo IAM_SERVER_SSM_ARN: ${{ inputs.IAM_SERVER_SSM_ARN }}
+          echo IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN }}
