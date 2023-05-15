@@ -115,8 +115,15 @@ jobs:
       domain: ${{ inputs.staging_domain }}
     secrets: inherit
 
-  deploy_production_frontend:
+  wait_for_production_approval:
+    runs-on: ubuntu-latest
     environment: production
+    steps:
+      - name: Approve Release to Production
+        run: |
+          echo "Approved Production Release for: " ${{ needs.release.outputs.version_tag }}
+
+  deploy_production_frontend:
     permissions: write-all
     needs: [deploy_staging_frontend,release]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
@@ -127,7 +134,6 @@ jobs:
       destination_branch: ${{ inputs.production_frontend_branch }}
 
   deploy_production_backend:
-    environment: production
     needs: [deploy_staging_backend,release]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
     with:
