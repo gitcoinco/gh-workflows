@@ -22,6 +22,9 @@ on:
         required: false
         type: string
 
+# TODO we should consolidate some of the scorer WFs and then decide what we want to keep in 
+# individual repos and what we want to move here to the common repo
+  
 jobs:
   passport:
     if: inputs.repo_name == 'passport'
@@ -40,14 +43,13 @@ jobs:
       ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_PRODUCTION }}
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
 
-  # TODO we should consolidate some of the scorer WFs and then decide what we want to keep in 
-  # individual repos and what we want to move here to the common repo
   passport_scorer_prod:
     if: inputs.repo_name == 'passport-scorer' && inputs.env_name == 'production'
     uses: gitcoinco/passport-scorer/.github/workflows/api-promote-prod.yml
     secrets: inherit
     with:
       commit: ${{ inputs.refspec }}
+
   passport_scorer_prod:
     if: inputs.repo_name == 'passport-scorer' && inputs.env_name == 'staging'
     uses: gitcoinco/passport-scorer/.github/workflows/api-promote-staging.yml
