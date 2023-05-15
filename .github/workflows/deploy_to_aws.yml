@@ -37,7 +37,7 @@ on:
 
 jobs:
   deploy_to_aws:
-    name: Deploy to Branch
+    name: Deploy to AWS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
