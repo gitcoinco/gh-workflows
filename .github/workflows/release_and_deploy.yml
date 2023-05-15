@@ -3,6 +3,9 @@ name: Release and Deploy
 on:
   workflow_call:
     inputs:
+      refspec: 
+        required: true
+        type: string
       repo_owner:
         required: true
         type: string
@@ -26,14 +29,14 @@ on:
         type: string
 
 jobs:
-  release:
+  test:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-          ref: main
+          ref: ${{ inputs.refspec }}
           fetch-depth: 0
 
       - name: Use Node.js 16
@@ -61,7 +64,7 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
 
-      - name: Release
+      - name: Draft Release
         # https://github.com/ncipollo/release-action
         uses: ncipollo/release-action@v1
         with:
@@ -70,13 +73,13 @@ jobs:
           generateReleaseNotes: true
           name: ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version_tag }}
+          draft: true
 
       - name: Store Commit SHA
         id: sha
         shell: bash
         run: |
-          git pull --tags
-          echo "sha_short=$(git rev-parse --short ${{ steps.version.outputs.version_tag }})" >> $GITHUB_OUTPUT
+          echo "sha_short=$(git rev-parse --short ${{ inputs.refspec }})" >> $GITHUB_OUTPUT
 
     outputs:
       version_tag: ${{ steps.version.outputs.version_tag }}
@@ -84,64 +87,96 @@ jobs:
 
   deploy_staging_frontend:
     permissions: write-all
-    needs: [release]
+    needs: [test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
       repo: ${{ inputs.repo_name }}
-      refspec: ${{ needs.release.outputs.version_tag }}
+      refspec: ${{ inputs.refspec }}
       destination_branch: ${{ inputs.staging_frontend_branch }}
 
   dockerize:
-    needs: [release]
+    needs: [test]
     uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
-      refspec: ${{ needs.release.outputs.version_tag }}
-      docker_tag: ${{ needs.release.outputs.commit_sha }}
+      refspec: ${{ inputs.refspec }}
+      docker_tag: ${{ needs.test.outputs.commit_sha }}
       ecr_repository: ${{ inputs.ecr_repository }}
     secrets:
       aws_access_key_id: ${{ secrets.aws_access_key_id_staging }}
       aws_secret_access_key: ${{ secrets.aws_secret_access_key_staging }}
 
   deploy_staging_backend:
-    needs: [release,dockerize]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
+    needs: [test,dockerize]
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
+      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      refspec: ${{ inputs.refspec }}
+      docker_tag: ${{ needs.test.outputs.commit_sha }}
       env_name: staging
-      repo_owner: ${{ inputs.repo_owner }}
-      repo_name: ${{ inputs.repo_name }}
-      refspec: ${{ needs.release.outputs.version_tag }}
-      docker_tag: ${{ needs.release.outputs.commit_sha }}
       domain: ${{ inputs.staging_domain }}
-    secrets: inherit
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+      ECR_URL: ${{secrets.ECR_URL_STAGING}}
+      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
+      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
 
   wait_for_production_approval:
+    needs: [deploy_staging_backend,deploy_staging_frontend,test]
     runs-on: ubuntu-latest
     environment: production
     steps:
       - name: Approve Release to Production
         run: |
-          echo "Approved Production Release for: " ${{ needs.release.outputs.version_tag }}
+          echo "Approved Production Release for: " ${{ needs.test.outputs.version_tag }}
+          echo "Ref" ${{ inputs.refspec }}
 
   deploy_production_frontend:
     permissions: write-all
-    needs: [deploy_staging_frontend,release]
+    needs: [wait_for_production_approval,test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
       repo: ${{ inputs.repo_name }}
-      refspec: ${{ needs.release.outputs.version_tag }}
+      refspec: ${{ inputs.refspec }}
       destination_branch: ${{ inputs.production_frontend_branch }}
 
   deploy_production_backend:
-    needs: [deploy_staging_backend,release]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
+    needs: [wait_for_production_approval,test]
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
+      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      refspec: ${{ inputs.refspec }}
+      docker_tag: ${{ needs.test.outputs.commit_sha }}
       env_name: production
-      repo_owner: ${{ inputs.repo_owner }}
-      repo_name: ${{ inputs.repo_name }}
-      refspec: ${{ needs.release.outputs.version_tag }}
-      docker_tag: ${{ needs.release.outputs.commit_sha }}
       domain: ${{ inputs.production_domain }}
-    secrets: inherit
+    secrets:
+      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
+      ECR_URL: ${{secrets.ECR_URL_PRODUCTION}}
+      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_PRODUCTION }}
+      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
+
+  release:
+    needs: [deploy_production_backend,deploy_production_frontend]
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+          ref: ${{ inputs.refspec }}
+          fetch-depth: 0
+
+      - name: Release
+        # https://github.com/ncipollo/release-action
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          token: ${{ secrets.github_token }}
+          tag: ${{ steps.version.outputs.version_tag }}
+          draft: false
