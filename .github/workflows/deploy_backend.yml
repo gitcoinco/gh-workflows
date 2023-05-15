@@ -50,7 +50,7 @@ jobs:
     with:
       commit: ${{ inputs.refspec }}
 
-  passport_scorer_prod:
+  passport_scorer_staging:
     if: inputs.repo_name == 'passport-scorer' && inputs.env_name == 'staging'
     uses: gitcoinco/passport-scorer/.github/workflows/api-promote-staging.yml
     secrets: inherit
