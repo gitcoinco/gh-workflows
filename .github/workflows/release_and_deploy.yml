@@ -62,6 +62,7 @@ jobs:
         id: version
         uses: paulhatch/semantic-version@v5.0.2
         with:
+          tag_prefix: "v"
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
 

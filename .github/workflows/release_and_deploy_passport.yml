@@ -29,7 +29,7 @@ jobs:
       repo_name: gh-workflows
       staging_frontend_branch: test_frontend_build_staging
       production_frontend_branch: test_frontend_build_prod
-      staging_domain: staging.passport-iam.gitcoin.co
+      staging_domain: iam.staging.passport.gitcoin.co
       production_domain: passport-iam.gitcoin.co
       ecr_repository: passport
     secrets: inherit
