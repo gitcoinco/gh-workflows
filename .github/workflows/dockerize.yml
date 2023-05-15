@@ -26,8 +26,7 @@ on:
 
 jobs:
   dockerize:
-    # Blank name for nested action
-    name: .
+    name: Dockerize
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

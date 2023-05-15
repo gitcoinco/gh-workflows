@@ -37,8 +37,7 @@ on:
 
 jobs:
   deploy_to_aws:
-    # Blank name for nested action
-    name: .
+    name: Deploy to Branch
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
