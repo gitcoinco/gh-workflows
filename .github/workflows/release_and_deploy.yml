@@ -66,16 +66,16 @@ jobs:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
 
-      - name: Draft Release
-        # https://github.com/ncipollo/release-action
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          token: ${{ secrets.github_token }}
-          generateReleaseNotes: true
-          name: ${{ steps.version.outputs.version }}
-          tag: ${{ steps.version.outputs.version_tag }}
-          draft: true
+            # - name: Draft Release
+            #   # https://github.com/ncipollo/release-action
+            #   uses: ncipollo/release-action@v1
+            #   with:
+            #     allowUpdates: true
+            #     token: ${{ secrets.github_token }}
+            #     generateReleaseNotes: true
+            #     name: ${{ steps.version.outputs.version }}
+            #     tag: ${{ steps.version.outputs.version_tag }}
+            #     draft: true
 
       - name: Store Commit SHA
         id: sha
