@@ -20,6 +20,8 @@ on:
 permissions: write-all
 jobs:
   deploy_to_branch:
+    # Blank name for nested action
+    name: .
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

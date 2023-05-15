@@ -30,6 +30,7 @@ on:
 
 jobs:
   test:
+    name: Test
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -87,6 +88,7 @@ jobs:
       commit_sha: ${{ steps.sha.outputs.sha_short }}
 
   deploy_staging_frontend:
+    name: Staging Frontend
     permissions: write-all
     needs: [test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
@@ -97,7 +99,7 @@ jobs:
       destination_branch: ${{ inputs.staging_frontend_branch }}
 
   dockerize:
-    name: .
+    name: Dockerize
     needs: [test]
     uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
     with:
@@ -110,6 +112,7 @@ jobs:
       aws_secret_access_key: ${{ secrets.aws_secret_access_key_staging }}
 
   deploy_staging_backend:
+    name: Staging Backend
     needs: [test,dockerize]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
@@ -127,6 +130,7 @@ jobs:
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
 
   wait_for_production_approval:
+    name: Production Approval Pending
     needs: [deploy_staging_backend,deploy_staging_frontend,test]
     runs-on: ubuntu-latest
     environment: production
@@ -137,6 +141,7 @@ jobs:
           echo "Ref" ${{ inputs.refspec }}
 
   deploy_production_frontend:
+    name: Production Frontend
     permissions: write-all
     needs: [wait_for_production_approval,test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
@@ -147,6 +152,7 @@ jobs:
       destination_branch: ${{ inputs.production_frontend_branch }}
 
   deploy_production_backend:
+    name: Production Backend
     needs: [wait_for_production_approval,test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
