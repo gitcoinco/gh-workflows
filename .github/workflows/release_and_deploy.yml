@@ -40,23 +40,22 @@ jobs:
           ref: ${{ inputs.refspec }}
           fetch-depth: 0
 
-            # TODO uncomment
-            # - name: Use Node.js 16
-            #   uses: actions/setup-node@v3
-            #   with:
-            #     node-version: 16
-            #     cache: "yarn"
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "yarn"
 
       - name: Lerna Bootstrap
-        run: echo lerna bootstrap
+        run: lerna bootstrap
 
       - name: Run Tests
         run: |
-          echo yarn test
+          yarn test
 
       - name: Run Linter
         run: |
-          echo yarn lint
+          yarn lint
 
       - name: Version
         # https://github.com/marketplace/actions/git-semantic-version
@@ -65,17 +64,6 @@ jobs:
         with:
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
-
-            # - name: Draft Release
-            #   # https://github.com/ncipollo/release-action
-            #   uses: ncipollo/release-action@v1
-            #   with:
-            #     allowUpdates: true
-            #     token: ${{ secrets.github_token }}
-            #     generateReleaseNotes: true
-            #     name: ${{ steps.version.outputs.version }}
-            #     tag: ${{ steps.version.outputs.version_tag }}
-            #     draft: true
 
       - name: Store Commit SHA
         id: sha
