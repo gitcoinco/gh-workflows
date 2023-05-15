@@ -39,11 +39,12 @@ jobs:
           ref: ${{ inputs.refspec }}
           fetch-depth: 0
 
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: "yarn"
+            # TODO uncomment
+            # - name: Use Node.js 16
+            #   uses: actions/setup-node@v3
+            #   with:
+            #     node-version: 16
+            #     cache: "yarn"
 
       - name: Lerna Bootstrap
         run: echo lerna bootstrap
@@ -178,5 +179,5 @@ jobs:
         with:
           allowUpdates: true
           token: ${{ secrets.github_token }}
-          tag: ${{ steps.version.outputs.version_tag }}
+          tag: ${{ needs.test.outputs.version_tag }}
           draft: false
