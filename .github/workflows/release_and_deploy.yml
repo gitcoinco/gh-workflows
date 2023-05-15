@@ -109,7 +109,8 @@ jobs:
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
     with:
       env_name: staging
-      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      repo_owner: ${{ inputs.repo_owner }}
+      repo_name: ${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ needs.release.outputs.commit_sha }}
       domain: ${{ inputs.staging_domain }}
@@ -138,7 +139,8 @@ jobs:
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
     with:
       env_name: production
-      repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
+      repo_owner: ${{ inputs.repo_owner }}
+      repo_name: ${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ needs.release.outputs.commit_sha }}
       domain: ${{ inputs.production_domain }}
