@@ -45,14 +45,14 @@ jobs:
 
   passport_scorer_prod:
     if: inputs.repo_name == 'passport-scorer' && inputs.env_name == 'production'
-    uses: gitcoinco/passport-scorer/.github/workflows/api-promote-prod.yml
+    uses: gitcoinco/passport-scorer/.github/workflows/api-promote-prod.yml@main
     secrets: inherit
     with:
       commit: ${{ inputs.refspec }}
 
   passport_scorer_staging:
     if: inputs.repo_name == 'passport-scorer' && inputs.env_name == 'staging'
-    uses: gitcoinco/passport-scorer/.github/workflows/api-promote-staging.yml
+    uses: gitcoinco/passport-scorer/.github/workflows/api-promote-staging.yml@main
     secrets: inherit
     with:
       commit: ${{ inputs.refspec }}
