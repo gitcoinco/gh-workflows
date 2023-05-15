@@ -97,6 +97,7 @@ jobs:
       destination_branch: ${{ inputs.staging_frontend_branch }}
 
   dockerize:
+    name: 
     needs: [test]
     uses: gitcoinco/gh-workflows/.github/workflows/dockerize.yml@main
     with:
