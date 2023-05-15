@@ -170,7 +170,7 @@ jobs:
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
 
   release:
-    needs: [deploy_production_backend,deploy_production_frontend]
+    needs: [deploy_production_backend,deploy_production_frontend,test]
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -187,4 +187,5 @@ jobs:
           allowUpdates: true
           token: ${{ secrets.github_token }}
           tag: ${{ needs.test.outputs.version_tag }}
+          commit: ${{ inputs.refspec }}
           draft: false
