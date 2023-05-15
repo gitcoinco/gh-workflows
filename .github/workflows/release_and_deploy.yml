@@ -106,33 +106,26 @@ jobs:
 
   deploy_staging_backend:
     needs: [release,dockerize]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
     with:
       env_name: staging
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ needs.release.outputs.commit_sha }}
       domain: ${{ inputs.staging_domain }}
-    env:
-      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-      ECR_URL: ${{secrets.ECR_URL_STAGING}}
-      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
-      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
+    secrets: inherit
 
   wait_for_production_approval:
-    needs: [deploy_staging_backend,deploy_staging_frontend,release]
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - name: Approve Release to Production
         run: |
           echo "Approved Production Release for: " ${{ needs.release.outputs.version_tag }}
 
   deploy_production_frontend:
+    environment: production
     permissions: write-all
-    needs: [wait_for_production_approval,release]
+    needs: [deploy_staging_frontend,release]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
@@ -141,18 +134,12 @@ jobs:
       destination_branch: ${{ inputs.production_frontend_branch }}
 
   deploy_production_backend:
-    needs: [wait_for_production_approval,release]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
+    environment: production
+    needs: [deploy_staging_backend,release]
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_backend.yml@main
     with:
+      env_name: production
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ needs.release.outputs.version_tag }}
       docker_tag: ${{ needs.release.outputs.commit_sha }}
-      env_name: production
       domain: ${{ inputs.production_domain }}
-    env:
-      PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_PRODUCTION }}
-      ECR_URL: ${{secrets.ECR_URL_PRODUCTION}}
-      ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_PRODUCTION }}
-      IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
