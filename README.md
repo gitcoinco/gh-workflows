@@ -19,5 +19,3 @@ This should be a common repo for at least all Passport apps.
 5. Scorer can switch to use this repo
 6. Staking can likely integrate this repo as-is for the frontend.
    Need to add a flag for the backend build so it can be skipped
-
-...
