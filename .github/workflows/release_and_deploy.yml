@@ -97,6 +97,7 @@ jobs:
         # https://github.com/ncipollo/release-action
         uses: ncipollo/release-action@v1
         with:
+          generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.github_token }}
           tag: ${{ needs.test.outputs.version_tag }}
