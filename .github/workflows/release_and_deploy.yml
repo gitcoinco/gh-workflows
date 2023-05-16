@@ -56,7 +56,7 @@ jobs:
           generateReleaseNotes: true
           allowUpdates: true
           token: ${{ secrets.github_token }}
-          tag: ${{ needs.test.outputs.version_tag }}
+          tag: ${{ steps.version.outputs.version_tag }}
           commit: ${{ inputs.refspec }}
           draft: true
 
