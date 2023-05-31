@@ -12,7 +12,10 @@ This should be a common repo for at least all Passport apps.
 2. Scorer workflows have been somewhat modified to run in a similar style, but
    not completely.
 3. Scorer staging and production workflows should be made to match each other
-4. Alternative Python Test and Dockerize actions can be added to this repo,
+   (i.e. this repo uses the exact same action for the staging and production 
+   workflow steps, scorer does not. Also scorer unnecessarily repeats tests
+   and dockerizing)
+5. Alternative Python Test and Dockerize actions can be added to this repo,
    protected by IF statements. These should be the only differences for
    passport vs. scorer. Some vars may need to be adjusted (e.g. passing in
    the name of the pulumi stack to load when pushing to AWS)
