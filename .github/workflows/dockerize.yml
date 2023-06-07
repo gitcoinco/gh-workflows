@@ -77,8 +77,10 @@ jobs:
       # build, tag, and push to ECR
       - name: Push image to Production Amazon ECR
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr-production.outputs.registry }}
+          ECR_REGISTRY_STAGING: ${{ steps.login-ecr-staging.outputs.registry }}
+          ECR_REGISTRY_PRODUCTION: ${{ steps.login-ecr-production.outputs.registry }}
           ECR_REPOSITORY: ${{ inputs.ecr_repository }}
           IMAGE_TAG: ${{ inputs.docker_tag }}
         run: |
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag $ECR_REGISTRY_STAGING/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
