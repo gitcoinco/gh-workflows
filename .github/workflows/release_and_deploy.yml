@@ -107,6 +107,7 @@ jobs:
       refspec: ${{ inputs.refspec }}
       docker_tag: ${{ needs.test.outputs.commit_sha }}
       ecr_repository: ${{ inputs.ecr_repository }}
+    secrets: inherit
 
         # deploy_staging_backend:
         #   name: Staging Backend

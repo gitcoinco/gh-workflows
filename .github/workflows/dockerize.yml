@@ -18,7 +18,15 @@ on:
       ecr_repository:
         required: true
         type: string
-    secrets: inherit
+    secrets:
+      aws_access_key_id_staging:
+        required: true
+      aws_secret_access_key_staging:
+        required: true
+      aws_access_key_id_production:
+        required: true
+      aws_secret_access_key_production:
+        required: true
 
 jobs:
   dockerize:
