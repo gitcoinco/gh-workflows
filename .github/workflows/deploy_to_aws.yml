@@ -52,6 +52,7 @@ jobs:
       # Update the pulumi stack with new image
       - run: |
           npm install
+          cd ${{ inputs.env_name }}
           pulumi stack select -c gitcoin/dpopp/${{ inputs.env_name }}
           pulumi config -s gitcoin/dpopp/${{ inputs.env_name }} set aws:region us-east-1 --non-interactive
         working-directory: infra/${{ inputs.env_name }}
