@@ -55,7 +55,7 @@ jobs:
           cd ${{ inputs.env_name }}
           pulumi stack select -c gitcoin/dpopp/${{ inputs.env_name }}
           pulumi config -s gitcoin/dpopp/${{ inputs.env_name }} set aws:region us-east-1 --non-interactive
-        working-directory: infra/${{ inputs.env_name }}
+        working-directory: infra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - uses: pulumi/actions@v3
