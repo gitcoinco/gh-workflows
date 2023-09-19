@@ -3,7 +3,7 @@ name: Release and Deploy
 on:
   workflow_call:
     inputs:
-      refspec: 
+      refspec:
         required: true
         type: string
       repo_owner:
@@ -18,7 +18,7 @@ on:
       production_frontend_branch:
         required: true
         type: string
-      staging_domain: 
+      staging_domain:
         required: true
         type: string
       production_domain:
@@ -111,7 +111,7 @@ jobs:
 
   deploy_staging_backend:
     name: Staging Backend
-    needs: [test,dockerize]
+    needs: [test, dockerize]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
@@ -126,10 +126,11 @@ jobs:
       ECR_URL: ${{secrets.ECR_URL_STAGING}}
       ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_STAGING }}
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_STAGING }}
+      PAGERDUTY_INTEGRATION_ENDPOINT: ${{ secrets.PAGERDUTY_INTEGRATION_ENDPOINT }}
 
   wait_for_production_approval:
     name: Production Approval Pending
-    needs: [deploy_staging_backend,deploy_staging_frontend,test]
+    needs: [deploy_staging_backend, deploy_staging_frontend, test]
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -141,7 +142,7 @@ jobs:
   deploy_production_frontend:
     name: Production Frontend
     permissions: write-all
-    needs: [wait_for_production_approval,test]
+    needs: [wait_for_production_approval, test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
@@ -151,7 +152,7 @@ jobs:
 
   deploy_production_backend:
     name: Production Backend
-    needs: [wait_for_production_approval,test]
+    needs: [wait_for_production_approval, test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
@@ -166,9 +167,10 @@ jobs:
       ECR_URL: ${{secrets.ECR_URL_PRODUCTION}}
       ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_PRODUCTION }}
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
+      PAGERDUTY_INTEGRATION_ENDPOINT: ${{ secrets.PAGERDUTY_INTEGRATION_ENDPOINT }}
 
   release:
-    needs: [deploy_production_backend,deploy_production_frontend,test]
+    needs: [deploy_production_backend, deploy_production_frontend, test]
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
