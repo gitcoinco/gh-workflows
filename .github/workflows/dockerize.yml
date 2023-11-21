@@ -44,7 +44,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.aws_access_key_id_staging }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key_staging }}
-          aws-region: us-east-1
+          aws-region: us-west-2
 
       # login to docker for AWS
       - name: Login to Staging Amazon ECR
