@@ -45,6 +45,8 @@ on:
         required: true
       PAGERDUTY_INTEGRATION_ENDPOINT:
         required: true
+      PASSPORT_VC_SECRETS_ARN:
+        required: true
 
 jobs:
   deploy_to_aws:
