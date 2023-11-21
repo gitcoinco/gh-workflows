@@ -86,6 +86,7 @@ jobs:
           DOCKER_GTC_PASSPORT_IAM_IMAGE: ${{secrets.ECR_URL}}:${{ inputs.docker_tag }}
           ROUTE_53_ZONE: ${{ secrets.ROUTE53_ZONE_ID }}
           ROUTE_53_DOMAIN: ${{ inputs.domain }}
+          DOMAIN: ${{ inputs.domain }}
           IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN }}
           PAGERDUTY_INTEGRATION_ENDPOINT: ${{ secrets.PAGERDUTY_INTEGRATION_ENDPOINT }}
           PASSPORT_VC_SECRETS_ARN: ${{ secrets.PASSPORT_VC_SECRETS_ARN }}
