@@ -176,6 +176,7 @@ jobs:
       ROUTE53_ZONE_ID: ${{ secrets.ROUTE53_ZONE_ID_PRODUCTION }}
       IAM_SERVER_SSM_ARN: ${{ secrets.IAM_SERVER_SSM_ARN_PRODUCTION }}
       PAGERDUTY_INTEGRATION_ENDPOINT: ${{ secrets.PAGERDUTY_INTEGRATION_ENDPOINT }}
+      PASSPORT_VC_SECRETS_ARN: TODO_SPECIFY_WHEN_MIGRATING_PROD
 
   release:
     needs: [deploy_production_backend, deploy_production_frontend, test]
