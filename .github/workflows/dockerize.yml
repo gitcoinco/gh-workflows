@@ -81,3 +81,24 @@ jobs:
         run: |
           docker tag $ECR_REGISTRY_STAGING/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Configure Oregon Production AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id_production }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key_production }}
+          aws-region: us-west-2
+
+      - name: Login to Oregon Amazon ECR Production
+        id: login-ecr-production
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Tag and push Oregon image to Production Amazon ECR
+        env:
+          ECR_REGISTRY_STAGING: ${{ steps.login-ecr-staging.outputs.registry }}
+          ECR_REGISTRY_PRODUCTION: ${{ steps.login-ecr-production.outputs.registry }}
+          ECR_REPOSITORY: ${{ inputs.ecr_repository }}
+          IMAGE_TAG: ${{ inputs.docker_tag }}
+        run: |
+          docker tag $ECR_REGISTRY_STAGING/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY_PRODUCTION/$ECR_REPOSITORY:$IMAGE_TAG
