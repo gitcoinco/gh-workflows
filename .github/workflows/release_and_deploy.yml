@@ -182,11 +182,11 @@ jobs:
     name: Production Approval Pending - AWS infra
     needs: [deploy_staging_backend, deploy_staging_frontend, test]
     runs-on: ubuntu-latest
-    environment: production
+    environment: production_alpha
     steps:
-      - name: Approve Release to Production
+      - name: Approve Release to Production alpha
         run: |
-          echo "Approved Production Release for: " ${{ needs.test.outputs.version_tag }}
+          echo "Approved Production Alpha Release for: " ${{ needs.test.outputs.version_tag }}
           echo "Ref" ${{ inputs.refspec }}
 
   deploy_production_backend_aws:
