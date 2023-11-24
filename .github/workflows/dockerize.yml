@@ -90,13 +90,13 @@ jobs:
           aws-region: us-west-2
 
       - name: Login to Oregon Amazon ECR Production
-        id: login-ecr-production
+        id: login-ecr-production-us-west-2
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Tag and push Oregon image to Production Amazon ECR
         env:
           ECR_REGISTRY_STAGING: ${{ steps.login-ecr-staging.outputs.registry }}
-          ECR_REGISTRY_PRODUCTION: ${{ steps.login-ecr-production.outputs.registry }}
+          ECR_REGISTRY_PRODUCTION: ${{ steps.login-ecr-production-us-west-2.outputs.registry }}
           ECR_REPOSITORY: ${{ inputs.ecr_repository }}
           IMAGE_TAG: ${{ inputs.docker_tag }}
         run: |
