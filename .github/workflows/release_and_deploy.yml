@@ -198,7 +198,7 @@ jobs:
       refspec: ${{ inputs.refspec }}
       docker_tag: ${{ needs.test.outputs.commit_sha }}
       env_name: production
-      domain: alpha.passport-iam.gitcoin.co
+      domain: passport-iam.gitcoin.co
       stack_name: gitcoin/passport/production
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
