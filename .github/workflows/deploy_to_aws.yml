@@ -15,9 +15,6 @@ on:
         description: "Commit short SHA"
         required: true
         type: string
-      env_name:
-        required: true
-        type: string
       stack_name:
         required: true
         type: string
@@ -65,7 +62,7 @@ jobs:
       # Update the pulumi stack with new image
       - run: |
           npm install
-          cd ${{ inputs.env_name }}
+          cd aws
           pulumi stack select -c ${{ inputs.stack_name }}
           pulumi config -s ${{ inputs.stack_name }} set aws:region ${{ inputs.pulumi_region }} --non-interactive
         working-directory: infra

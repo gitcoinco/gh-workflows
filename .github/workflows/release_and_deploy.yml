@@ -117,9 +117,8 @@ jobs:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ inputs.refspec }}
       docker_tag: ${{ needs.test.outputs.commit_sha }}
-      env_name: staging
       domain: ${{ inputs.staging_domain }}
-      stack_name: gitcoin/passport/staging
+      stack_name: gitcoin/staging
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
     secrets:
@@ -154,28 +153,16 @@ jobs:
       refspec: ${{ inputs.refspec }}
       destination_branch: ${{ inputs.production_frontend_branch }}
 
-  wait_for_production_aws_approval:
-    name: Production Approval Pending - AWS infra
-    needs: [deploy_staging_backend, deploy_staging_frontend, test]
-    runs-on: ubuntu-latest
-    environment: production_alpha
-    steps:
-      - name: Approve Release to Production alpha
-        run: |
-          echo "Approved Production Alpha Release for: " ${{ needs.test.outputs.version_tag }}
-          echo "Ref" ${{ inputs.refspec }}
-
   deploy_production_backend:
     name: Production Backend - AWS Infra
-    needs: [wait_for_production_aws_approval, test]
+    needs: [wait_for_production_approval, test]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ inputs.refspec }}
       docker_tag: ${{ needs.test.outputs.commit_sha }}
-      env_name: production
       domain: passport-iam.gitcoin.co
-      stack_name: gitcoin/passport/production
+      stack_name: gitcoin/production
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
 
