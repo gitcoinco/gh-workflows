@@ -27,6 +27,15 @@ on:
       domain:
         required: true
         type: string
+      staking_app_github_url:
+        required: true
+        type: string
+      staking_app_enable_auth:
+        required: true
+        type: string
+      staking_app_basic_auth_username:
+        required: true
+        type: string
     secrets:
       PULUMI_ACCESS_TOKEN:
         required: true
@@ -43,6 +52,10 @@ on:
       PAGERDUTY_INTEGRATION_ENDPOINT:
         required: true
       PASSPORT_VC_SECRETS_ARN:
+        required: true
+      STAKING_APP_GITHUB_ACCESS_TOKEN_FOR_AMPLIFY:
+        required: true
+      STAKING_APP_BASIC_AUTH_PASSWORD:
         required: true
 
 jobs:
