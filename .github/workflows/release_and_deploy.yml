@@ -121,6 +121,11 @@ jobs:
       stack_name: gitcoin/staging
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
+
+      staking_app_github_url: ${{ vars.STAKING_APP_GITHUB_URL_STAGING }}
+      staking_app_enable_auth: ${{ vars.STAKING_APP_ENABLE_AUTH_STAGING }}
+      staking_app_basic_auth_username: ${{ vars.STAKING_APP_BASIC_AUTH_USERNAME_STAGING }}
+
     secrets:
       PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
@@ -174,6 +179,10 @@ jobs:
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
 
+      staking_app_github_url: ${{ vars.STAKING_APP_GITHUB_URL_PRODUCTION }}
+      staking_app_enable_auth: ${{ vars.STAKING_APP_ENABLE_AUTH_PRODUCTION }}
+      staking_app_basic_auth_username: ${{ vars.STAKING_APP_BASIC_AUTH_USERNAME_PRODUCTION }}
+
     secrets:
       PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRODUCTION }}
@@ -186,12 +195,6 @@ jobs:
 
       STAKING_APP_GITHUB_ACCESS_TOKEN_FOR_AMPLIFY: ${{ secrets.STAKING_APP_GITHUB_ACCESS_TOKEN_FOR_AMPLIFY_PRODUCTION }}
       STAKING_APP_BASIC_AUTH_PASSWORD: ${{ secrets.STAKING_APP_BASIC_AUTH_PASSWORD_PRODUCTION }}
-
-    env:
-      STAKING_APP_GITHUB_URL: ${{ vars.STAKING_APP_GITHUB_URL_PRODUCTION }}
-      STAKING_APP_ENABLE_AUTH: ${{ vars.STAKING_APP_ENABLE_AUTH_PRODUCTION }}
-      STAKING_APP_BASIC_AUTH_USERNAME: ${{ vars.STAKING_APP_BASIC_AUTH_USERNAME_PRODUCTION }}
-
 
   release:
     needs: [deploy_production_backend, deploy_production_frontend, test]

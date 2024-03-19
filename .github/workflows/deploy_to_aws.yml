@@ -90,3 +90,7 @@ jobs:
 
           STAKING_APP_GITHUB_ACCESS_TOKEN_FOR_AMPLIFY: ${{ secrets.STAKING_APP_GITHUB_ACCESS_TOKEN_FOR_AMPLIFY }}
           STAKING_APP_BASIC_AUTH_PASSWORD: ${{ secrets.STAKING_APP_BASIC_AUTH_PASSWORD }}
+
+          STAKING_APP_GITHUB_URL_STAGING: ${{ inputs.staking_app_github_url }}
+          STAKING_APP_ENABLE_AUTH_STAGING: ${{ inputs.staking_app_enable_auth }}
+          STAKING_APP_BASIC_AUTH_USERNAME_STAGING: ${{ inputs.staking_app_basic_auth_username }}
