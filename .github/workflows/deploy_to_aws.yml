@@ -107,3 +107,9 @@ jobs:
           STAKING_APP_GITHUB_URL: ${{ inputs.staking_app_github_url }}
           STAKING_APP_ENABLE_AUTH: ${{ inputs.staking_app_enable_auth }}
           STAKING_APP_BASIC_AUTH_USERNAME: ${{ inputs.staking_app_basic_auth_username }}
+
+          STAKING_DATADOG_CLIENT_TOKEN_STAGING: ${{ secrets.STAKING_DATADOG_CLIENT_TOKEN_STAGING }}
+          STAKING_DATADOG_CLIENT_TOKEN_PRODUCTION: ${{ secrets.STAKING_DATADOG_CLIENT_TOKEN_PRODUCTION }}
+          STAKING_MAINNET_RPC_URL: ${{ secrets.STAKING_MAINNET_RPC_URL }}
+          STAKING_OP_SEPOLIA_RPC_URL: ${{ secrets.STAKING_OP_SEPOLIA_RPC_URL }}
+          STAKING_OP_RPC_URL: ${{ secrets.STAKING_OP_RPC_URL }}
