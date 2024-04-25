@@ -24,6 +24,10 @@ on:
       pulumi_region:
         required: true
         type: string
+      pulumi_cmd: 
+        required: true
+        description: "Options: up or preview"
+        type: string
       domain:
         required: true
         type: string
@@ -100,7 +104,7 @@ jobs:
       - uses: pulumi/actions@v3
         id: pulumi
         with:
-          command: preview
+          command: ${{ inputs.pulumi_cmd }} # preview or up
           stack-name: ${{ inputs.stack_name }}
           upsert: false
           work-dir: ${{ inputs.pulumi_working_dir }}
