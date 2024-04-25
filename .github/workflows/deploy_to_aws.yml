@@ -68,9 +68,9 @@ on:
       STAKING_OP_RPC_URL:
         required: true
       CLOUDFLARE_API_TOKEN:
-        required: false # required only for production
+        required: true # required only for production
       CLOUDFLARE_ZONE_ID:
-        required: false # required only for production
+        required: true # required only for production
       
 
 
