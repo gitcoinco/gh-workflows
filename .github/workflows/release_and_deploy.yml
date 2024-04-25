@@ -112,7 +112,7 @@ jobs:
   deploy_staging_backend:
     name: Staging Backend
     needs: [test, dockerize]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@2372_stake_prd
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ inputs.refspec }}
@@ -173,7 +173,7 @@ jobs:
   deploy_production_backend:
     name: Production Backend - AWS Infra
     needs: [wait_for_production_approval, test]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@main
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@2372_stake_prd
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
       refspec: ${{ inputs.refspec }}
