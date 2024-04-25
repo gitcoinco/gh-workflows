@@ -149,9 +149,20 @@ jobs:
           echo "Approved Staging Release for: " ${{ needs.test.outputs.version_tag }}
           echo "Ref" ${{ inputs.refspec }}
   
+  deploy_staging_frontend:
+    name: Staging Frontend
+    permissions: write-all
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval]
+    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
+    with:
+      owner: ${{ inputs.repo_owner }}
+      repo: ${{ inputs.repo_name }}
+      refspec: ${{ inputs.refspec }}
+      destination_branch: ${{ inputs.staging_frontend_branch }}
+
   deploy_staging_backend:
     name: Staging Backend
-    needs: [test, dockerize, wait_for_staging_preview_approval]
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@2372_stake_prd
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
@@ -161,7 +172,7 @@ jobs:
       stack_name: gitcoin/staging
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
-      pulumi_cmd: up
+      pulumi_cmd: preview
 
       staking_app_github_url: ${{ vars.STAKING_APP_GITHUB_URL_STAGING }}
       staking_app_enable_auth: ${{ vars.STAKING_APP_ENABLE_AUTH_STAGING }}
@@ -189,20 +200,9 @@ jobs:
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-  deploy_staging_frontend:
-    name: Staging Frontend
-    permissions: write-all
-    needs: [test, wait_for_staging_preview_approval]
-    uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
-    with:
-      owner: ${{ inputs.repo_owner }}
-      repo: ${{ inputs.repo_name }}
-      refspec: ${{ inputs.refspec }}
-      destination_branch: ${{ inputs.staging_frontend_branch }}
-
   preview_production_backend:
     name: Preview Pulumi changes for Production Backend - AWS Infra
-    needs: [test]
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval, deploy_staging_frontend, deploy_staging_backend]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@2372_stake_prd
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
@@ -242,7 +242,7 @@ jobs:
   
   wait_for_production_approval:
     name: Production Approval Pending
-    needs: [deploy_staging_backend, deploy_staging_frontend, preview_production_backend, test]
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval, deploy_staging_frontend, deploy_staging_backend,  preview_production_backend]
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -254,7 +254,7 @@ jobs:
   deploy_production_frontend:
     name: Production Frontend
     permissions: write-all
-    needs: [wait_for_production_approval, test]
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval, deploy_staging_frontend, deploy_staging_backend,  preview_production_backend, wait_for_production_approval]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_branch.yml@main
     with:
       owner: ${{ inputs.repo_owner }}
@@ -264,7 +264,7 @@ jobs:
 
   deploy_production_backend:
     name: Production Backend - AWS Infra
-    needs: [wait_for_production_approval, test]
+    needs: [test, dockerize, preview_staging_backend, wait_for_staging_preview_approval, deploy_staging_frontend, deploy_staging_backend, preview_production_backend, wait_for_production_approval]
     uses: gitcoinco/gh-workflows/.github/workflows/deploy_to_aws.yml@2372_stake_prd
     with:
       repository: ${{ inputs.repo_owner }}/${{ inputs.repo_name }}
