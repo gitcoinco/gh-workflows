@@ -172,7 +172,7 @@ jobs:
       stack_name: gitcoin/staging
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
-      pulumi_cmd: preview
+      pulumi_cmd: up
 
       staking_app_github_url: ${{ vars.STAKING_APP_GITHUB_URL_STAGING }}
       staking_app_enable_auth: ${{ vars.STAKING_APP_ENABLE_AUTH_STAGING }}
@@ -274,7 +274,7 @@ jobs:
       stack_name: gitcoin/production
       pulumi_working_dir: infra/aws
       pulumi_region: us-west-2
-      pulumi_cmd: preview
+      pulumi_cmd: up
 
       staking_app_github_url: ${{ vars.STAKING_APP_GITHUB_URL_PRODUCTION }}
       staking_app_enable_auth: ${{ vars.STAKING_APP_ENABLE_AUTH_PRODUCTION }}
