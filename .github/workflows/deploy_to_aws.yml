@@ -24,6 +24,10 @@ on:
       pulumi_region:
         required: true
         type: string
+      pulumi_cmd: 
+        required: true
+        description: "Options: up or preview"
+        type: string
       domain:
         required: true
         type: string
@@ -67,6 +71,11 @@ on:
         required: true
       STAKING_OP_RPC_URL:
         required: true
+      CLOUDFLARE_API_TOKEN:
+        required: true # required only for production
+      CLOUDFLARE_ZONE_ID:
+        required: true # required only for production
+      
 
 
 jobs:
@@ -95,7 +104,7 @@ jobs:
       - uses: pulumi/actions@v3
         id: pulumi
         with:
-          command: up
+          command: ${{ inputs.pulumi_cmd }} # preview or up
           stack-name: ${{ inputs.stack_name }}
           upsert: false
           work-dir: ${{ inputs.pulumi_working_dir }}
@@ -124,3 +133,7 @@ jobs:
           STAKING_MAINNET_RPC_URL: ${{ secrets.STAKING_MAINNET_RPC_URL }}
           STAKING_OP_SEPOLIA_RPC_URL: ${{ secrets.STAKING_OP_SEPOLIA_RPC_URL }}
           STAKING_OP_RPC_URL: ${{ secrets.STAKING_OP_RPC_URL }}
+
+          # cloudflare config : just for production
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
